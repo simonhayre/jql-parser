@@ -28,7 +28,7 @@ class JQLParser
      */
     private function processKeyValues(FilterCollection $filterCollection, $query)
     {
-        preg_match_all('/(?<key>\w+)\s+?(?<operator>in|not\s+in)\s+?(?<values>\(\"[A-Za-z0-9_.\-@\s]+\"\)|\([A-Za-z0-9_.\-@]+\))/i', $query, $result);
+        preg_match_all('/(?<key>\w+)\s+?(?<operator>in|not\s+in|\=|\!\=)\s+?(?<values>\(?\"[A-Za-z0-9_.\-@\s]+\"\)?|\(?[A-Za-z0-9_.\-@]+\)?)/i', $query, $result);
 
         $this->setKeyValues($filterCollection, $result);
 
@@ -60,7 +60,7 @@ class JQLParser
                         (new Filter\KeyValue())
                             ->setKey($key)
                             ->setValues($valueCollection)
-                            ->setNot((bool) preg_match('/not\s+in/i', $operator))
+                            ->setNot((bool) preg_match('/not\s+in|\!\=/i', $operator))
                     );
             }
         }

@@ -114,4 +114,101 @@ class JQLParserTest extends TestCase
             $this->jqlParser->parse('reporter in (simon-hayre@simon_hayre.co.uk) subject not in ("Missing Key") order by created DESC name ASC')
         );
     }
+
+    public function testFilterReturnsWhenAndsJoinQueryInTheSearchIsPassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('reporter')
+                        ->addValue('simon-hayre@simon_hayre.co.uk')
+                )
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('subject')
+                        ->setNot(true)
+                        ->addValue('Missing Key')
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('reporter in (simon-hayre@simon_hayre.co.uk) and subject not in ("Missing Key") order by created DESC name ASC')
+        );
+    }
+
+    public function testFilterReturnsWhenEqualOperatorIsPassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('reporter')
+                        ->addValue('simon-hayre@simon_hayre.co.uk')
+                )
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('subject')
+                        ->setNot(true)
+                        ->addValue('Missing Key')
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('reporter = simon-hayre@simon_hayre.co.uk and subject != "Missing Key" order by created DESC name ASC')
+        );
+    }
+
+    public function testFilterReturnsWhenOrsJoinQueryInTheSearchIsPassed()
+    {
+        $this->markTestIncomplete('Or Operator needs to be considered.');
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('reporter')
+                        ->addValue('simon-hayre@simon_hayre.co.uk')
+                )
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('subject')
+                        ->setNot(true)
+                        ->addValue('Missing Key')
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('reporter in (simon-hayre@simon_hayre.co.uk) or subject not in ("Missing Key") order by created DESC name ASC')
+        );
+    }
 }
