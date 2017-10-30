@@ -82,4 +82,36 @@ class JQLParserTest extends TestCase
             $this->jqlParser->parse('reporter not in (simonhayre) order by created DESC')
         );
     }
+
+    public function testFilterReturnsWhenMultipleKeysInTheSearchIsPassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('reporter')
+                        ->addValue('simon-hayre@simon_hayre.co.uk')
+                )
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('subject')
+                        ->setNot(true)
+                        ->addValue('Missing Key')
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('reporter in (simon-hayre@simon_hayre.co.uk) subject not in ("Missing Key") order by created DESC name ASC')
+        );
+    }
 }
