@@ -40,6 +40,27 @@ class JQLParserTest extends TestCase
         );
     }
 
+    public function testFilterReturnsWhenSimpleHasEmailAddressSearchIsPassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('reporter')
+                        ->addValue('simon-hayre@simon_hayre.co.uk')
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('reporter in (simon-hayre@simon_hayre.co.uk) order by created DESC')
+        );
+    }
+
     public function testFilterReturnsWhenSimpleSearchWithANotIsPassed()
     {
         $expectedFilterCollection =

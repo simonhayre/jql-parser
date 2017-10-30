@@ -28,7 +28,7 @@ class JQLParser
                 $values = $result['values'][$i];
                 $operator = $result['operator'][$i];
 
-                preg_match_all('/(?<values>([A-Za-z0-9_.]+)|(\"[A-Za-z0-9_.\s]+\"))/i', $values, $valueResult);
+                preg_match_all('/(?<values>([A-Za-z0-9_.\-@]+)|(\"[A-Za-z0-9_.\s]+\"))/i', $values, $valueResult);
 
                 $valueCollection = new Filter\ValueCollection();
 
