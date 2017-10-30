@@ -1,0 +1,31 @@
+{
+    "name": "simonhayre/jql-parser",
+    "description": "JQL Parser",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "SHJQLParser\\": "lib"
+        }
+    },
+    "require": {
+        "php": ">=5.6.10"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\SHJQLParser\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phake/phake": "@stable",
+        "phpunit/phpunit": "@stable",
+        "phpunit/php-invoker": "@stable"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Hayre",
+            "email": "simon@simonhayre.co.uk"
+        }
+    ],
+    "minimum-stability": "dev"
+}
