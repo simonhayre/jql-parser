@@ -24,7 +24,7 @@ class JQLParserTest extends TestCase
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simonhayre')
                 )
@@ -45,7 +45,7 @@ class JQLParserTest extends TestCase
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simon-hayre@simon_hayre.co.uk')
                 )
@@ -66,7 +66,7 @@ class JQLParserTest extends TestCase
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simonhayre')
                         ->setNot(true)
@@ -88,12 +88,12 @@ class JQLParserTest extends TestCase
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simon-hayre@simon_hayre.co.uk')
                 )
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('subject')
                         ->setNot(true)
                         ->addValue('Missing Key')
@@ -120,12 +120,12 @@ class JQLParserTest extends TestCase
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simon-hayre@simon_hayre.co.uk')
                 )
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('subject')
                         ->setNot(true)
                         ->addValue('Missing Key')
@@ -154,13 +154,13 @@ class JQLParserTest extends TestCase
                 ->add(
                     (new Lib\Filter\KeyValue())
                         ->setKey('reporter')
-                        ->addValue('simon-hayre@simon_hayre.co.uk')
+                        ->setValue('simon-hayre@simon_hayre.co.uk')
                 )
                 ->add(
                     (new Lib\Filter\KeyValue())
                         ->setKey('subject')
                         ->setNot(true)
-                        ->addValue('Missing Key')
+                        ->setValue('Missing Key')
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -185,12 +185,12 @@ class JQLParserTest extends TestCase
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simon-hayre@simon_hayre.co.uk')
                 )
                 ->add(
-                    (new Lib\Filter\KeyValue())
+                    (new Lib\Filter\KeyInValues())
                         ->setKey('subject')
                         ->setNot(true)
                         ->addValue('Missing Key')
@@ -211,4 +211,36 @@ class JQLParserTest extends TestCase
             $this->jqlParser->parse('reporter in (simon-hayre@simon_hayre.co.uk) or subject not in ("Missing Key") order by created DESC name ASC')
         );
     }
+
+//    public function testFilterReturnsWhenBetweenOperatorIsPassed()
+//    {
+//        $expectedFilterCollection =
+//            (new Lib\Filter\FilterCollection())
+//                ->add(
+//                    (new Lib\Filter\KeyValue())
+//                        ->setKey('reporter')
+//                        ->setValue('simon-hayre@simon_hayre.co.uk')
+//                )
+//                ->add(
+//                    (new Lib\Filter\KeyValue())
+//                        ->setKey('subject')
+//                        ->setNot(true)
+//                        ->setValue('Missing Key')
+//                )
+//                ->add(
+//                    (new Lib\Filter\OrderBy())
+//                        ->setKey('created')
+//                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+//                )
+//                ->add(
+//                    (new Lib\Filter\OrderBy())
+//                        ->setKey('name')
+//                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+//                );
+//
+//        $this->assertEquals(
+//            $expectedFilterCollection,
+//            $this->jqlParser->parse('date between "2017-01-01" and "2017-01-02" order by created DESC name ASC')
+//        );
+//    }
 }

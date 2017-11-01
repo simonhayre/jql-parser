@@ -2,7 +2,7 @@
 
 namespace SHJQLParser\Filter;
 
-class KeyValue implements Filter
+class KeyAfterValue implements Filter
 {
     /** @var string */
     private $key;
@@ -22,7 +22,7 @@ class KeyValue implements Filter
     /**
      * @param string $key
      *
-     * @return KeyValue
+     * @return KeyAfterValue
      */
     public function setKey($key)
     {
@@ -41,7 +41,7 @@ class KeyValue implements Filter
     /**
      * @param mixed $value
      *
-     * @return KeyValue
+     * @return KeyAfterValue
      */
     public function setValue($value)
     {
@@ -60,7 +60,7 @@ class KeyValue implements Filter
     /**
      * @param bool $not
      *
-     * @return KeyValue
+     * @return KeyAfterValue
      */
     public function setNot($not)
     {

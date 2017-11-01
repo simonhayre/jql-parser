@@ -1,0 +1,6 @@
+[01-Nov-2017 12:15:35 Europe/Berlin] PHP Fatal error:  Call to undefined method SHJQLParser\Filter\KeyValue::addValue() in /Users/simonhayre/git/jql_parser/tests/JQLParserTest.php on line 29
+[01-Nov-2017 12:16:29 Europe/Berlin] PHP Fatal error:  Class 'SHJQLParser\Filter\KeyInValue' not found in /Users/simonhayre/git/jql_parser/tests/JQLParserTest.php on line 27
+[01-Nov-2017 12:17:08 Europe/Berlin] PHP Fatal error:  Class 'SHJQLParser\Filter\KeyInValues' not found in /Users/simonhayre/git/jql_parser/tests/JQLParserTest.php on line 27
+[01-Nov-2017 12:17:28 Europe/Berlin] PHP Fatal error:  Class 'SHJQLParser\Filter\KeyInValue' not found in /Users/simonhayre/git/jql_parser/lib/JQLParser.php on line 62
+[01-Nov-2017 12:17:44 Europe/Berlin] PHP Fatal error:  Class 'SHJQLParser\Filter\KeyInValue' not found in /Users/simonhayre/git/jql_parser/lib/JQLParser.php on line 62
+[01-Nov-2017 14:10:00 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$this' (T_VARIABLE) in /Users/simonhayre/git/jql_parser/tests/Operator/InTest.php on line 24

@@ -2,12 +2,12 @@
 
 namespace SHJQLParser\Filter;
 
-class KeyValue implements Filter
+class KeyBetweenValue implements Filter
 {
     /** @var string */
     private $key;
-    /** @var mixed */
-    private $value;
+    /** @var ValueCollection */
+    private $values;
     /** @var bool */
     private $not = false;
 
@@ -22,7 +22,7 @@ class KeyValue implements Filter
     /**
      * @param string $key
      *
-     * @return KeyValue
+     * @return KeyBetweenValue
      */
     public function setKey($key)
     {
@@ -31,21 +31,32 @@ class KeyValue implements Filter
     }
 
     /**
-     * @return mixed
+     * @return ValueCollection
      */
-    public function getValue()
+    public function getValues()
     {
-        return $this->value;
+        return $this->values;
+    }
+
+    /**
+     * @param ValueCollection $values
+     *
+     * @return KeyBetweenValue
+     */
+    public function setValues(ValueCollection $values)
+    {
+        $this->values = $values;
+        return $this;
     }
 
     /**
      * @param mixed $value
      *
-     * @return KeyValue
+     * @return KeyBetweenValue
      */
-    public function setValue($value)
+    public function addValue($value)
     {
-        $this->value = $value;
+        $this->values->add($value);
         return $this;
     }
 
@@ -60,7 +71,7 @@ class KeyValue implements Filter
     /**
      * @param bool $not
      *
-     * @return KeyValue
+     * @return KeyBetweenValue
      */
     public function setNot($not)
     {

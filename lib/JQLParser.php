@@ -5,6 +5,20 @@ use SHJQLParser\Filter\FilterCollection;
 
 class JQLParser
 {
+    /** @var Operator\Operator[] */
+    private $operators = [];
+
+    public function __construct()
+    {
+        $this->operators = [
+            new Operator\eq(),
+            new Operator\in(),
+            new Operator\between(),
+            new Operator\after(),
+            new Operator\before(),
+        ];
+    }
+
     /**
      * @param string $query
      *
@@ -14,7 +28,7 @@ class JQLParser
     {
         $filterCollection = (new FilterCollection());
 
-        $this->processKeyValues($filterCollection, $query);
+        $this->processOperators($filterCollection, $query);
         $this->processOrderBy($filterCollection, $query);
 
         return $filterCollection;
@@ -26,44 +40,30 @@ class JQLParser
      *
      * @return JQLParser
      */
-    private function processKeyValues(FilterCollection $filterCollection, $query)
+    private function processOperators(FilterCollection $filterCollection, $query)
     {
-        preg_match_all('/(?<key>\w+)\s+?(?<operator>in|not\s+in|\=|\!\=)\s+?(?<values>\(?\"[A-Za-z0-9_.\-@\s]+\"\)?|\(?[A-Za-z0-9_.\-@]+\)?)/i', $query, $result);
+        $cases = [];
+        foreach ($this->operators as $operator) {
+            $cases[] = '(?:' . $operator->getCaseRegEx() . ')';
+        }
 
-        $this->setKeyValues($filterCollection, $result);
+        preg_match_all('/(?<cases>(?:' . implode('|', $cases) . '))/i',
+            $query,
+            $result
+        );
 
-        return $this;
-    }
-
-    /**
-     * @param FilterCollection $filterCollection
-     * @param array            $result
-     */
-    private function setKeyValues(FilterCollection $filterCollection, array $result)
-    {
-        if (!empty($result['key']) && !empty($result['values'])) {
-            for ($i = 0; $i < min(count($result['key']), count($result['values'])); $i++) {
-                $key = $result['key'][$i];
-                $values = $result['values'][$i];
-                $operator = $result['operator'][$i];
-
-                preg_match_all('/(?<values>([A-Za-z0-9_.\-@]+)|(\"[A-Za-z0-9_.\-@\s]+\"))/i', $values, $valueResult);
-
-                $valueCollection = new Filter\ValueCollection();
-
-                foreach ($valueResult['values'] as $value) {
-                    $valueCollection->add(str_replace(['"'], '', $value));
+        if (!empty($result['cases'])) {
+            foreach ($result['cases'] as $case) {
+                foreach ($this->operators as $operator) {
+                    if ($operator->isCase($case)) {
+                        $filterCollection->add($operator->createFilter($case));
+                        break;
+                    }
                 }
-
-                $filterCollection
-                    ->add(
-                        (new Filter\KeyValue())
-                            ->setKey($key)
-                            ->setValues($valueCollection)
-                            ->setNot((bool) preg_match('/not\s+in|\!\=/i', $operator))
-                    );
             }
         }
+
+        return $this;
     }
 
     /**
