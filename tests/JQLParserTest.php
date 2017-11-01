@@ -27,6 +27,7 @@ class JQLParserTest extends TestCase
                     (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simonhayre')
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -48,6 +49,7 @@ class JQLParserTest extends TestCase
                     (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simon-hayre@simon_hayre.co.uk')
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -70,6 +72,7 @@ class JQLParserTest extends TestCase
                         ->setKey('reporter')
                         ->addValue('simonhayre')
                         ->setNot(true)
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -97,6 +100,7 @@ class JQLParserTest extends TestCase
                         ->setKey('subject')
                         ->setNot(true)
                         ->addValue('Missing Key')
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -129,6 +133,7 @@ class JQLParserTest extends TestCase
                         ->setKey('subject')
                         ->setNot(true)
                         ->addValue('Missing Key')
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -161,6 +166,7 @@ class JQLParserTest extends TestCase
                         ->setKey('subject')
                         ->setNot(true)
                         ->setValue('Missing Key')
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -181,19 +187,20 @@ class JQLParserTest extends TestCase
 
     public function testFilterReturnsWhenOrsJoinQueryInTheSearchIsPassed()
     {
-        $this->markTestIncomplete('Or Operator needs to be considered.');
         $expectedFilterCollection =
             (new Lib\Filter\FilterCollection())
                 ->add(
                     (new Lib\Filter\KeyInValues())
                         ->setKey('reporter')
                         ->addValue('simon-hayre@simon_hayre.co.uk')
+                        ->setJoiningOperator(Lib\Filter\AbstractFilter::OR_JOIN)
                 )
                 ->add(
                     (new Lib\Filter\KeyInValues())
                         ->setKey('subject')
                         ->setNot(true)
                         ->addValue('Missing Key')
+                        ->setJoiningOperator(null)
                 )
                 ->add(
                     (new Lib\Filter\OrderBy())
@@ -212,35 +219,155 @@ class JQLParserTest extends TestCase
         );
     }
 
-//    public function testFilterReturnsWhenBetweenOperatorIsPassed()
-//    {
-//        $expectedFilterCollection =
-//            (new Lib\Filter\FilterCollection())
-//                ->add(
-//                    (new Lib\Filter\KeyValue())
-//                        ->setKey('reporter')
-//                        ->setValue('simon-hayre@simon_hayre.co.uk')
-//                )
-//                ->add(
-//                    (new Lib\Filter\KeyValue())
-//                        ->setKey('subject')
-//                        ->setNot(true)
-//                        ->setValue('Missing Key')
-//                )
-//                ->add(
-//                    (new Lib\Filter\OrderBy())
-//                        ->setKey('created')
-//                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
-//                )
-//                ->add(
-//                    (new Lib\Filter\OrderBy())
-//                        ->setKey('name')
-//                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
-//                );
-//
-//        $this->assertEquals(
-//            $expectedFilterCollection,
-//            $this->jqlParser->parse('date between "2017-01-01" and "2017-01-02" order by created DESC name ASC')
-//        );
-//    }
+    public function testFilterReturnsWhenBetweenOperatorIsPassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\KeyBetweenValue())
+                        ->setKey('date')
+                        ->setValues(
+                            (new Lib\Filter\ValueCollection())
+                                ->add('2017-01-01')
+                                ->add('2017-01-02')
+                        )
+                        ->setJoiningOperator(null)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('date between "2017-01-01" and "2017-01-02" order by created DESC name ASC')
+        );
+    }
+
+    public function testFilterReturnsWhenNestedOperatorsArePassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\FilterCollection())
+                        ->add(
+                            (new Lib\Filter\KeyBetweenValue())
+                                ->setKey('date')
+                                ->setValues(
+                                    (new Lib\Filter\ValueCollection())
+                                        ->add('2017-01-01')
+                                        ->add('2017-01-02')
+                                )
+                        )
+                        ->add(
+                            (new Lib\Filter\KeyInValues())
+                                ->setKey('name')
+                                ->addValue('bob')
+                                ->addValue('james')
+                        )
+
+                )
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('name')
+                        ->setValue('simon')
+                        ->setJoiningOperator(null)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('(date between "2017-01-01" and "2017-01-02" AND name in ("bob" "james")) name = "simon" order by created DESC name ASC')
+        );
+    }
+
+
+    public function testFilterReturnsWhenComplicatedNestedOperatorsArePassed()
+    {
+        $expectedFilterCollection =
+            (new Lib\Filter\FilterCollection())
+                ->add(
+                    (new Lib\Filter\FilterCollection())
+                        ->add(
+                            (new Lib\Filter\KeyBetweenValue())
+                                ->setKey('date')
+                                ->setValues(
+                                    (new Lib\Filter\ValueCollection())
+                                        ->add('2017-01-01')
+                                        ->add('2017-01-02')
+                                )
+                        )
+                        ->add(
+                            (new Lib\Filter\FilterCollection())
+                                ->add(
+                                    (new Lib\Filter\KeyInValues())
+                                        ->setKey('name')
+                                        ->addValue('bob')
+                                        ->addValue('james')
+                                )
+                                ->add(
+                                    (new Lib\Filter\KeyValue())
+                                        ->setKey('age')
+                                        ->setNot(true)
+                                        ->setValue('56')
+                                )
+                        )
+                        ->add(
+                            (new Lib\Filter\KeyValue())
+                                ->setKey('isActive')
+                                ->setValue('true')
+                                ->setJoiningOperator(Lib\Filter\Filter::OR_JOIN)
+                        )
+                )
+                ->add(
+                    (new Lib\Filter\FilterCollection())
+                        ->add(
+                            (new Lib\Filter\KeyValue())
+                                ->setKey('name')
+                                ->setValue('simon')
+                        )
+                        ->add(
+                            (new Lib\Filter\KeyValue())
+                                ->setKey('isActive')
+                                ->setValue('true')
+                                ->setJoiningOperator(Lib\Filter\Filter::OR_JOIN)
+                        )
+                )
+                ->add(
+                    (new Lib\Filter\KeyValue())
+                        ->setKey('isActive')
+                        ->setValue('false')
+                        ->setJoiningOperator(null)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('created')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_DESC)
+                )
+                ->add(
+                    (new Lib\Filter\OrderBy())
+                        ->setKey('name')
+                        ->setDirection(Lib\Filter\OrderBy::DIRECTION_ASC)
+                );
+
+        $this->assertEquals(
+            $expectedFilterCollection,
+            $this->jqlParser->parse('(date between "2017-01-01" and "2017-01-02" AND (name in ("bob" "james") AND age != 56) isActive = true) or (name = "simon" isActive = true) OR isActive = false order by created DESC name ASC')
+        );
+    }
 }

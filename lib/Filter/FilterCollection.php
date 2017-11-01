@@ -2,7 +2,7 @@
 
 namespace SHJQLParser\Filter;
 
-class FilterCollection extends \ArrayObject
+class FilterCollection extends \ArrayObject implements Filter
 {
     /**
      * FilterCollection constructor.
@@ -19,11 +19,11 @@ class FilterCollection extends \ArrayObject
     }
 
     /**
-     * @param Filter $filter
+     * @param Item $filter
      *
      * @return FilterCollection
      */
-    public function add(Filter $filter)
+    public function add(Item $filter)
     {
         $this->append($filter);
 
@@ -31,18 +31,26 @@ class FilterCollection extends \ArrayObject
     }
 
     /**
-     * @param Filter $filter
+     * @param Item $filter
      *
      * @return FilterCollection
      */
     public function append($filter)
     {
-        if (!$filter instanceof Filter) {
-            throw new \InvalidArgumentException(sprintf('$filter must be an instance of %s', Filter::class));
+        if (!$filter instanceof Item) {
+            throw new \InvalidArgumentException(sprintf('$filter must be an instance of %s', Item::class));
         }
 
         parent::append($filter);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return null;
     }
 }

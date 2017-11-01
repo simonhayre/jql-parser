@@ -40,24 +40,45 @@ class JQLParser
      *
      * @return JQLParser
      */
-    private function processOperators(FilterCollection $filterCollection, $query)
+    private function processOperators(FilterCollection $filterCollection, $query, $lastJoiningOperator = null)
     {
-        $cases = [];
+        $cases = ['(?:\(((?>[^()]+)|(?R))*\))'];
         foreach ($this->operators as $operator) {
             $cases[] = '(?:' . $operator->getCaseRegEx() . ')';
         }
 
-        preg_match_all('/(?<cases>(?:' . implode('|', $cases) . '))/i',
+        preg_match_all('/(?<cases>(?:' . implode('|', $cases) . '))(?:\s+)?(?<joiningOperator>(?:and|or))?/i',
             $query,
             $result
         );
 
         if (!empty($result['cases'])) {
-            foreach ($result['cases'] as $case) {
-                foreach ($this->operators as $operator) {
-                    if ($operator->isCase($case)) {
-                        $filterCollection->add($operator->createFilter($case));
-                        break;
+            $casesCount = count($result['cases']);
+            for ($i = 0; $i < $casesCount; $i++) {
+
+                $case = $result['cases'][$i];
+                $joiningOperator = empty($result['joiningOperator'][$i]) ? 'and' : $result['joiningOperator'][$i];
+
+                if (substr($case, 0, 1) !== '(' || substr($case, -1) !== ')') {
+                    foreach ($this->operators as $operator) {
+                        if ($operator->isCase($case)) {
+                            $filterCollection->add(
+                                $operator
+                                    ->createFilter($case)
+                                    ->setJoiningOperator(
+                                        $i < $casesCount - 1 ? strtoupper($joiningOperator) : $lastJoiningOperator
+                                    )
+                            );
+                            break;
+                        }
+                    }
+                } else {
+                    $nestedFilters = (new FilterCollection());
+                    $this->processOperators($nestedFilters, substr($case, 1, strlen($case) - 2), strtoupper($joiningOperator));
+
+                    if ($nestedFilters->count()) {
+                        $filterCollection
+                            ->add($nestedFilters);
                     }
                 }
             }

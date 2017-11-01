@@ -2,7 +2,7 @@
 
 namespace SHJQLParser\Filter;
 
-class KeyBetweenValue implements Filter
+class KeyBetweenValue extends AbstractFilter
 {
     /** @var string */
     private $key;

@@ -2,7 +2,7 @@
 
 namespace SHJQLParser\Filter;
 
-class OrderBy implements Filter
+class OrderBy implements Item
 {
     const DIRECTION_ASC = 'ASC';
     const DIRECTION_DESC = 'DESC';

@@ -2,7 +2,7 @@
 
 namespace SHJQLParser\Filter;
 
-class KeyBeforeValue implements Filter
+class KeyBeforeValue extends AbstractFilter
 {
     /** @var string */
     private $key;

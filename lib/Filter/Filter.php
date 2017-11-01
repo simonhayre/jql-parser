@@ -2,8 +2,8 @@
 
 namespace SHJQLParser\Filter;
 
-interface Filter
+interface Filter extends Item
 {
-    /** string */
-    public function getKey();
+    const AND_JOIN = 'AND';
+    const OR_JOIN = 'OR';
 }
