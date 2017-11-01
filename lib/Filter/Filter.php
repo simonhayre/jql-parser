@@ -2,4 +2,8 @@
 
 namespace SHJQLParser\Filter;
 
-interface Filter {}
+interface Filter
+{
+    /** string */
+    public function getKey();
+}
