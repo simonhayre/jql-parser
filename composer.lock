@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eebd1c243f55a9a0e4ef9b2573ec8cbc",
-    "content-hash": "2dce559b887108962954f67348d551d9",
+    "hash": "2209aab09a48d0f746f7d20134368ac1",
+    "content-hash": "0081b5215cd805d828d6e953be4e8d57",
     "packages": [],
     "packages-dev": [
         {
@@ -106,64 +106,6 @@
                 "object graph"
             ],
             "time": "2017-10-19 19:58:43"
-        },
-        {
-            "name": "phake/phake",
-            "version": "v2.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mlively/Phake.git",
-                "reference": "d5832f1a0dd2370e14d38bcbaeb6770e8546cff2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mlively/Phake/zipball/d5832f1a0dd2370e14d38bcbaeb6770e8546cff2",
-                "reference": "d5832f1a0dd2370e14d38bcbaeb6770e8546cff2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "sebastian/comparator": "~1.1"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "doctrine/common": "2.3.*",
-                "ext-soap": "*",
-                "hamcrest/hamcrest-php": "1.1.*",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "suggest": {
-                "doctrine/common": "Allows mock annotations to use import statements for classes.",
-                "hamcrest/hamcrest-php": "Use Hamcrest matchers."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Phake": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Mike Lively",
-                    "email": "m@digitalsandwich.com"
-                }
-            ],
-            "description": "The Phake mock testing library",
-            "homepage": "https://github.com/mlively/Phake",
-            "keywords": [
-                "mock",
-                "testing"
-            ],
-            "time": "2017-03-20 05:16:34"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -483,52 +425,6 @@
                 "iterator"
             ],
             "time": "2017-10-30 04:21:02"
-        },
-        {
-            "name": "phpunit/php-invoker",
-            "version": "1.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-invoker.git",
-                "reference": "86074bf0fc2caf02ec8819a93f65a37cd0b44c8e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-invoker/zipball/86074bf0fc2caf02ec8819a93f65a37cd0b44c8e",
-                "reference": "86074bf0fc2caf02ec8819a93f65a37cd0b44c8e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pcntl": "*",
-                "php": ">=5.3.3",
-                "phpunit/php-timer": ">=1.0.6"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Utility class for invoking callables with a timeout.",
-            "homepage": "https://github.com/sebastianbergmann/php-invoker/",
-            "keywords": [
-                "process"
-            ],
-            "time": "2015-06-21 13:32:55"
         },
         {
             "name": "phpunit/php-text-template",
@@ -1435,9 +1331,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "phake/phake": 0,
-        "phpunit/phpunit": 0,
-        "phpunit/php-invoker": 0
+        "phpunit/phpunit": 0
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -16,9 +16,7 @@
         }
     },
     "require-dev": {
-        "phake/phake": "@stable",
-        "phpunit/phpunit": "@stable",
-        "phpunit/php-invoker": "@stable"
+        "phpunit/phpunit": "@stable"
     },
     "license": "MIT",
     "authors": [
