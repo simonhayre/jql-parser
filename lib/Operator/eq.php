@@ -8,7 +8,7 @@ class eq implements Operator
      */
     public function getCaseRegEx()
     {
-        return '\w+\s+?(?:\=|\!\=)\s+?(?:\"[A-Za-z0-9_.\-@\s]+\"|[A-Za-z0-9_.\-@]+)';
+        return '\w+\s+?(?:\=|\!\=)\s+?(?:\"(?:\\\\\"|[^\"])+\"|(?:\\\\\"|[^\"\s])+)';
     }
 
     /**
@@ -18,7 +18,7 @@ class eq implements Operator
      */
     public function isCase($case)
     {
-        return preg_match('/' . $this->getCaseRegEx() . '/i', $case) > 0;
+        return preg_match('/^' . $this->getCaseRegEx() . '$/i', $case) > 0;
     }
 
     /**
@@ -28,7 +28,7 @@ class eq implements Operator
      */
     public function createFilter($case)
     {
-        preg_match('/(?<key>\w+)\s+?(?<operator>\=|\!\=)\s+?(?<value>\"[A-Za-z0-9_.\-@\s]+\"|[A-Za-z0-9_.\-@]+)/i', $case, $result);
+        preg_match('/(?<key>\w+)\s+?(?<operator>\=|\!\=)\s+?(?<value>\"(?:\\\\\"|[^\"])+\"|(?:\\\\\"|[^\"\s])+)/i', $case, $result);
 
         $key = $result['key'];
         $value = $result['value'];

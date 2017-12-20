@@ -59,7 +59,15 @@ class JQLParser
                 $case = $result['cases'][$i];
                 $joiningOperator = empty($result['joiningOperator'][$i]) ? 'and' : $result['joiningOperator'][$i];
 
-                if (substr($case, 0, 1) !== '(' || substr($case, -1) !== ')') {
+                if (substr($case, 0, 1) === '(' && substr($case, -1) === ')') {
+                    $nestedFilters = (new FilterCollection());
+                    $this->processOperators($nestedFilters, substr($case, 1, strlen($case) - 2), strtoupper($joiningOperator));
+
+                    if ($nestedFilters->count()) {
+                        $filterCollection
+                            ->add($nestedFilters);
+                    }
+                } else {
                     foreach ($this->operators as $operator) {
                         if ($operator->isCase($case)) {
                             $filterCollection->add(
@@ -71,14 +79,6 @@ class JQLParser
                             );
                             break;
                         }
-                    }
-                } else {
-                    $nestedFilters = (new FilterCollection());
-                    $this->processOperators($nestedFilters, substr($case, 1, strlen($case) - 2), strtoupper($joiningOperator));
-
-                    if ($nestedFilters->count()) {
-                        $filterCollection
-                            ->add($nestedFilters);
                     }
                 }
             }

@@ -8,7 +8,7 @@ class in implements Operator
      */
     public function getCaseRegEx()
     {
-        return '\w+\s+?(?:in|not\s+in)\s+?\((?:(?:\"[A-Za-z0-9_\.\-@\s]+\")|[A-Za-z0-9_\.\-@]+|\s+)+\)';
+        return '\w+\s+?(?:in|not\s+in)\s+?\((?:(?:\"(?:\\\\\"|[^\"])+\")|(?:\\\\\"|\\\\\(|\\\\\)|[^\"\(\)])+)+\)';
     }
 
     /**
@@ -18,7 +18,7 @@ class in implements Operator
      */
     public function isCase($case)
     {
-        return preg_match('/' . $this->getCaseRegEx() . '/i', $case) > 0;
+        return preg_match('/^' . $this->getCaseRegEx() . '$/i', $case) > 0;
     }
 
     /**
@@ -28,18 +28,22 @@ class in implements Operator
      */
     public function createFilter($case)
     {
-        preg_match('/(?<key>\w+)\s+?(?<operator>in|not\s+in)\s+?(?<values>\((?:(?:\"[A-Za-z0-9_\.\-@\s]+\")|[A-Za-z0-9_\.\-@]+|\s+)+\))/i', $case, $result);
+        preg_match('/(?<key>\w+)\s+?(?<operator>in|not\s+in)\s+?(?<values>\((?:(?:\"(?:\\\\\"|[^\"])+\")|(?:\\\\\"|\\\\\(|\\\\\)|[^\"\(\)])+)+\))/i', $case, $result);
 
         $key = $result['key'];
         $values = $result['values'];
         $operator = $result['operator'];
 
-        preg_match_all('/(?<values>([A-Za-z0-9_.\-@]+)|(\"[A-Za-z0-9_.\-@\s]+\"))/i', $values, $valueResult);
+        preg_match_all('/(?<values>(?:(?:\"(?:\\\\\"|[^\"])+\")|(?:\\\\\"|\\\\\(|\\\\\)|[^\"\(\)\s])+)+)/i', $values, $valueResult);
 
         $valueCollection = new \SHJQLParser\Filter\ValueCollection();
 
         foreach ($valueResult['values'] as $value) {
-            $valueCollection->add(str_replace(['"'], '', $value));
+            $value = str_replace(['"'], '', $value);
+            if (!preg_match('/[^\s]+/', $value)) {
+                continue;
+            }
+            $valueCollection->add($value);
         }
 
         return (new \SHJQLParser\Filter\KeyInValues())
